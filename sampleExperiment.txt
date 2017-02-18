@@ -1,4 +1,4 @@
-dataset /home/philip/Desktop/faster-kmeans/baylorml/fast_kmeans/smallDataset.txt
+dataset /home/philip/Desktop/testkmeans/smallDataset.txt
 
 initialize 10 kpp
 

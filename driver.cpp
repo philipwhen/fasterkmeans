@@ -39,15 +39,7 @@
 #include "dataset.h"
 #include "general_functions.h"
 #include "hamerly_kmeans.h"
-#include "annulus_kmeans.h"
-#include "drake_kmeans.h"
-#include "naive_kmeans.h"
 #include "elkan_kmeans.h"
-#include "compare_kmeans.h"
-#include "sort_kmeans.h"
-#include "heap_kmeans.h"
-#include "naive_kernel_kmeans.h"
-#include "elkan_kernel_kmeans.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -58,6 +50,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <unistd.h>
+#include <vector>
 
 void execute(std::string command, Kmeans *algorithm, Dataset const *x, unsigned short k, unsigned short const *assignment,
         int xcNdx, int numThreads, int maxIterations,
@@ -185,69 +178,14 @@ int main(int argc, char **argv) {
             int seed;
             std::cin >> seed;
             srand(seed);
-        } else if (command == "lloyd" || command == "naive") {
-            algorithm = new NaiveKmeans();
-        } else if (command == "hamerly") {
+        }
+          else if (command == "hamerly") {
             algorithm = new HamerlyKmeans();
-        } else if (command == "annulus" || command == "norm") {
-            algorithm = new AnnulusKmeans();
-        } else if (command == "elkan") {
+        }
+          else if (command == "elkan") {
             algorithm = new ElkanKmeans();
-        } else if (command == "drake") {
-            // Read the number of bounds
-            int b;
-            std::cin >> b;
-
-            // Ensure b is in the interval [2, k)
-            if (b < 2 || b >= k) {
-                std::cerr << "Invalid number of lower bounds: " << b << std::endl;
-                continue;
-            }
-
-            algorithm = new DrakeKmeans(b);
-        } else if (command == "adaptive") {
-            // Start at k/4
-            int b = k / 4;
-
-            // Fix any degenerate cases
-            if (b < 2) b = 2;
-            if (k <= b) b = k - 1;
-
-            algorithm = new DrakeKmeans(b);
-        } else if (command == "compare") {
-            algorithm = new CompareKmeans();
-        } else if (command == "sort") {
-            algorithm = new SortKmeans();
-        } else if (command == "heap") {
-            algorithm = new HeapKmeans();
-        } else if (command == "kernel" || command == "elkan_kernel") {
-            std::string kernelType;
-            std::cin >> kernelType;
-            Kernel const *kernel = NULL;
-            if (kernelType == "gaussian") {
-                double tau;
-                std::cin >> tau;
-                kernel = new GaussianKernel(tau);
-            } else if (kernelType == "linear") {
-                kernel = new LinearKernel;
-            } else if (kernelType == "polynomial") {
-                double add, power;
-                std::cin >> add >> power;
-                kernel = new PolynomialKernel(add, power);
-            }
-            if (! kernel) {
-                std::cerr << "Invalid kernel specification" << std::endl;
-                continue;
-            }
-            if (command == "kernel") {
-                algorithm = new NaiveKernelKmeans(kernel);
-            } else if (command == "elkan_kernel") {
-                algorithm = new ElkanKernelKmeans(kernel);
-            } else {
-                delete kernel;
-                continue;
-            }
-        } else if (command == "center") {
+        }
+          else if (command == "center") {
             std::cout << "centering dataset" << std::endl;
             centerDataset(x);
         } else if (command == "quit" || command == "exit") {
