@@ -1,6 +1,7 @@
 #include "dataset.h"
 #include "general_functions.h"
 #include "hamerly_kmeans.h"
+#include "hplus_kmeans.h"
 #include "elkan_kmeans.h"
 #include <iostream>
 #include <fstream>
@@ -15,8 +16,10 @@
 #include <vector>
 
 void execute(Kmeans *algorithm, Dataset const *x, unsigned short k, unsigned short const *assignment,
+    int xcNdx,
     int numthreads,
-    int maxIterations
+    int maxIterations,
+    std::vector<int> *numItersHistory
     );
 
 int main(int argc, char **argv){
@@ -26,11 +29,15 @@ int main(int argc, char **argv){
 
     Kmeans *algorithm = NULL;
 
+    std::vector<int> numItersHistory;
+
+    int xcNdx = 0;
     int numthread = 1;
-//    int maxIterations = std::numeric_limits<int>::max();
-    int maxIterations = 500;
+    int maxIterations = std::numeric_limits<int>::max();
+//    int maxIterations = 500;
+    xcNdx++;
     std::string dataFilename;
-    dataFilename = "";
+    dataFilename = "/home/philip/Desktop/testkmeans/smallDataset.txt";
     std::ifstream input(dataFilename.c_str());
 
     int n = 1000;
@@ -44,7 +51,7 @@ int main(int argc, char **argv){
     for (int i = 0; i < n * d; i++){
         input >> x->data[i];
     }
-
+    xcNdx++;
     k = 10;
     std::string method = "kmeansplusplus";
     Dataset *c = NULL;
@@ -58,10 +65,13 @@ int main(int argc, char **argv){
 
     assign(*x, *c, assignment);
     delete c;
-    algorithm = new HamerlyKmeans();
-    execute(algorithm, x, k, assignment, numthread, maxIterations);
+    algorithm = new HplusKmeans();
+    execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
     delete algorithm;
     algorithm = NULL;
+    algorithm = new ElkanKmeans();
+    execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+
 }
 
 rusage get_time() {
@@ -112,10 +122,12 @@ double elapsed_time(rusage *start) {
 }
 
 void execute(Kmeans *algorithm, Dataset const *x, unsigned short k, unsigned short const *assignment,
+    int xcNdx,
     int numthreads,
-    int maxIterations
+    int maxIterations,
+    std::vector<int> *numItersHistory
     ){
-    std::cout<< std::setw[35] << algorithm->getName() << "\t" << std::flush;
+    std::cout<< std::setw(35) << algorithm->getName() << "\t" << std::flush;
     // make a working copy
     unsigned short *workingassignment = new unsigned short[x->n];
     std::copy(assignment, assignment + x->n, workingassignment);
@@ -129,6 +141,10 @@ void execute(Kmeans *algorithm, Dataset const *x, unsigned short k, unsigned sho
     std::cout << std::setw(10) << numthreads << "\t";
     std::cout << std::setw(10) << cluster_time << "\t";
     std::cout << std::setw(10) << cluster_wall_time << "\t";
+    while (numItersHistory->size() <= (size_t)xcNdx){
+        numItersHistory->push_back(iterations);
+    }
+    std::cout << std::endl;
     delete [] workingassignment;
 
 
