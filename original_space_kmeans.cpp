@@ -47,6 +47,7 @@ int OriginalSpaceKmeans::move_centers() {
                 }
                 z /= totalClusterSize;
                 centerMovement[j] += (z - (*centers)(j, dim)) * (z - (*centers)(j, dim));
+                (*cmv)(j, dim) = z - (*centers)(j, dim);
                 (*centers)(j, dim) = z;
             }
         }
@@ -69,6 +70,8 @@ void OriginalSpaceKmeans::initialize(Dataset const *aX, unsigned short aK, unsig
 
     centers = new Dataset(k, d);
     sumNewCenters = new Dataset *[numThreads];
+    cmv = new Dataset(k, d);
+    cmv->fill(0.0);
     centers->fill(0.0);
 
     for (int t = 0; t < numThreads; ++t) {

@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <string>
+#include "dataset.h"
 
 /* Add together two vectors, and put the result in the first argument.
  * Calculates a = a + b
@@ -24,7 +25,7 @@
  */
 void addVectors(double *a, double const *b, int d);
 
-/* Subtract two vectors, and put the result in the first argument. Calculates 
+/* Subtract two vectors, and put the result in the first argument. Calculates
  * a = a - b
  *
  * Parameters:

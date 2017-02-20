@@ -28,7 +28,7 @@ class Kmeans {
         // until convergence (or until reaching maxIterations). It returns the
         // number of iterations performed.
         int run(int aMaxIterations = std::numeric_limits<int>::max());
-    
+
         // Get the cluster assignment for the given point index.
         int getAssignment(int xIndex) const { return assignment[xIndex]; }
 
@@ -113,6 +113,7 @@ class Kmeans {
         // distance bounds (in subclasses that use them).
         double *centerMovement;
 
+
         // For each point in x, keep which cluster it is assigned to. By using a
         // short, we assume a limited number of clusters (fewer than 2^16).
         unsigned short *assignment;
@@ -121,7 +122,7 @@ class Kmeans {
         // This is where each thread does its work.
         virtual int runThread(int threadId, int maxIterations) = 0;
 
-        // Static entry method for pthread_create(). 
+        // Static entry method for pthread_create().
         static void *runner(void *args);
 
         // Assign point at xIndex to cluster newCluster, working within thread threadId.
