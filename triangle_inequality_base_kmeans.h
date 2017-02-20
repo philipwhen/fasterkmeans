@@ -37,6 +37,8 @@ class TriangleInequalityBaseKmeans : public OriginalSpaceKmeans {
         // the centers being tracked for lower bounds, which may be 1 to k.
         // Actual size is n * numLowerBounds.
         double *lower;
+
+        int *secondclosest;
 };
 
 #endif

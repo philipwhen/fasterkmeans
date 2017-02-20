@@ -22,7 +22,7 @@ class OriginalSpaceKmeans : public Kmeans {
     public:
         OriginalSpaceKmeans();
         virtual ~OriginalSpaceKmeans() { free(); }
-        virtual void free(); 
+        virtual void free();
         virtual void initialize(Dataset const *aX, unsigned short aK, unsigned short *initialAssignment, int aNumThreads);
 
         virtual double pointPointInnerProduct(int x1ndx, int x2ndx) const;
@@ -39,7 +39,8 @@ class OriginalSpaceKmeans : public Kmeans {
 
         // The set of centers we are operating on.
         Dataset *centers;
-    
+        Dataset *cmv;
+
         // sumNewCenters and centerCount provide sufficient statistics to
         // quickly calculate the changing locations of the centers. Whenever a
         // point changes cluster membership, we subtract (add) it from (to) the

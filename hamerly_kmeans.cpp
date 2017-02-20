@@ -156,7 +156,7 @@ void HamerlyKmeans::update_bounds(int startNdx, int endNdx) {
 
     // update upper/lower bounds
     for (int i = startNdx; i < endNdx; ++i) {
-        // the upper bound increases by the amount that its center moved 
+        // the upper bound increases by the amount that its center moved
         upper[i] += centerMovement[assignment[i]];
 
         // The lower bound decreases by the maximum amount that any center

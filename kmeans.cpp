@@ -48,6 +48,7 @@ void Kmeans::initialize(Dataset const *aX, unsigned short aK, unsigned short *in
 
     assignment = initialAssignment;
     centerMovement = new double[k];
+
     clusterSize = new int *[numThreads];
     for (int t = 0; t < numThreads; ++t) {
         clusterSize[t] = new int[k];

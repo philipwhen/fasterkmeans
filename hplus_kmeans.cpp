@@ -2,7 +2,8 @@
 #include "general_functions.h"
 #include <cmath>
 
-int HplusKmeans::runThread(int threadId, int maxIterations){
+int HplusKmeans::runThread(int x, int y){ std::cout << "hello"; return 0;}
+int HplusKmeans::executethread(int threadId, int maxIterations, Dataset *x){
     int iterations = 0;
 
     int startNdx = start(threadId);
@@ -47,6 +48,7 @@ int HplusKmeans::runThread(int threadId, int maxIterations){
 
             if (assignment[i] != closest){
                 upper[i] = sqrt(u2);
+                secondclosest[i] = assignment[i];
                 changeAssignment(i, closest, threadId);
             }
         }
@@ -61,7 +63,7 @@ int HplusKmeans::runThread(int threadId, int maxIterations){
         synchronizeAllThreads();
 
         if (! converged) {
-            update_bounds(startNdx, endNdx);
+            update_bounds(startNdx, endNdx, x);
         }
         synchronizeAllThreads();
 
@@ -70,7 +72,7 @@ int HplusKmeans::runThread(int threadId, int maxIterations){
 
 }
 
-void HplusKmeans::update_bounds(int startNdx, int endNdx){
+void HplusKmeans::update_bounds(int startNdx, int endNdx, Dataset *x){
     int furthestMovingCenter = 0;
     double longest = centerMovement[furthestMovingCenter];
     double secondLongest = 0.0;
@@ -84,8 +86,12 @@ void HplusKmeans::update_bounds(int startNdx, int endNdx){
     }
 
     for (int i = startNdx; i < endNdx; ++i){
-        upper[i] += centerMovement[assignment[i]];
-
+//        upper[i] += centerMovement[assignment[i]];
+        double sum = 0.0;
+        for (int dim = 0; dim < x->d; dim++){
+            sum += (*(x->data + i*(x->d) + dim) -(*centers)(assignment[i], dim)) * (*cmv)(assignment[i], dim);
+        }
+        if (sum < 0.0){upper[i] += centerMovement[assignment[i]];}
         lower[i] -= (assignment[i] == furthestMovingCenter) ? secondLongest : longest;
 
     }
