@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include <vector>
 
-void execute(HplusKmeans *algorithm, Dataset *x, unsigned short k, unsigned short const *assignment,
+void execute(Kmeans *algorithm, Dataset *x, unsigned short k, unsigned short const *assignment,
     int xcNdx,
     int numthreads,
     int maxIterations,
@@ -27,7 +27,7 @@ int main(int argc, char **argv){
     unsigned short *assignment = NULL;
     unsigned short k;
 
-    HplusKmeans *algorithm = NULL;
+    Kmeans *algorithm = NULL;
 
     std::vector<int> numItersHistory;
 
@@ -65,12 +65,12 @@ int main(int argc, char **argv){
 
     assign(*x, *c, assignment);
     delete c;
-    algorithm = new HplusKmeans();
+    algorithm = new HamerlyKmeans();
     execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
- //   delete algorithm;
-//    Kmeans *algorithm2 = NULL;
-//    algorithm = new ElkanKmeans();
-//    execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+    delete algorithm;
+    Kmeans *algorithm2 = NULL;
+    algorithm = new ElkanKmeans();
+    execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
 
 }
 
@@ -121,7 +121,7 @@ double elapsed_time(rusage *start) {
     return (double)diff.tv_sec + (double)diff.tv_usec / 1e6;
 }
 
-void execute(HplusKmeans *algorithm, Dataset *x, unsigned short k, unsigned short const *assignment,
+void execute(Kmeans *algorithm, Dataset *x, unsigned short k, unsigned short const *assignment,
     int xcNdx,
     int numthreads,
     int maxIterations,
@@ -134,8 +134,7 @@ void execute(HplusKmeans *algorithm, Dataset *x, unsigned short k, unsigned shor
     rusage start_time = get_time();
     double start_wall_time = get_wall_time();
     algorithm->initialize(x,k,workingassignment, numthreads);
-//    int iterations = algorithm->run(maxIterations);
-    int iterations = algorithm->executethread(0, maxIterations, x);
+    int iterations = algorithm->run(maxIterations);
     double cluster_time = elapsed_time(&start_time);
     double cluster_wall_time = get_wall_time() - start_wall_time;
     std::cout << std::setw(5) << iterations << "\t";

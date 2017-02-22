@@ -39,7 +39,6 @@ class OriginalSpaceKmeans : public Kmeans {
 
         // The set of centers we are operating on.
         Dataset *centers;
-        Dataset *cmv;
 
         // sumNewCenters and centerCount provide sufficient statistics to
         // quickly calculate the changing locations of the centers. Whenever a
