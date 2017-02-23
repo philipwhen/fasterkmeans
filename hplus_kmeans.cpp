@@ -2,8 +2,8 @@
 #include "general_functions.h"
 #include <cmath>
 
-int HplusKmeans::runThread(int x, int y){ std::cout << "hello"; return 0;}
-int HplusKmeans::executethread(int threadId, int maxIterations, Dataset *x){
+//int HplusKmeans::runThread(int x, int y){ std::cout << "hello"; return 0;}
+int HplusKmeans::runThread(int threadId, int maxIterations){
     int iterations = 0;
 
     int startNdx = start(threadId);
@@ -63,7 +63,7 @@ int HplusKmeans::executethread(int threadId, int maxIterations, Dataset *x){
         synchronizeAllThreads();
 
         if (! converged) {
-            update_bounds(startNdx, endNdx, x);
+            update_bounds(startNdx, endNdx);
         }
         synchronizeAllThreads();
 
@@ -72,7 +72,7 @@ int HplusKmeans::executethread(int threadId, int maxIterations, Dataset *x){
 
 }
 
-void HplusKmeans::update_bounds(int startNdx, int endNdx, Dataset *x){
+void HplusKmeans::update_bounds(int startNdx, int endNdx){
     int furthestMovingCenter = 0;
     double longest = centerMovement[furthestMovingCenter];
     double secondLongest = 0.0;
