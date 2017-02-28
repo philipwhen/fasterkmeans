@@ -42,6 +42,7 @@ int HamerlyKmeans::runThread(int threadId, int maxIterations) {
 
     int startNdx = start(threadId);
     int endNdx = end(threadId);
+//    std::cout<<startNdx<<"\n"<<endNdx<<"\n";
 
     while ((iterations < maxIterations) && ! converged) {
         ++iterations;

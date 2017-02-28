@@ -21,6 +21,7 @@
 class OriginalSpaceKmeans : public Kmeans {
     public:
         OriginalSpaceKmeans();
+        Dataset *centers;
         virtual ~OriginalSpaceKmeans() { free(); }
         virtual void free();
         virtual void initialize(Dataset const *aX, unsigned short aK, unsigned short *initialAssignment, int aNumThreads);
@@ -38,7 +39,7 @@ class OriginalSpaceKmeans : public Kmeans {
         virtual void changeAssignment(int xIndex, int closestCluster, int threadId);
 
         // The set of centers we are operating on.
-        Dataset *centers;
+//        Dataset *centers;
 
         // sumNewCenters and centerCount provide sufficient statistics to
         // quickly calculate the changing locations of the centers. Whenever a

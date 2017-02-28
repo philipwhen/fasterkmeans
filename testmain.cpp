@@ -1,7 +1,7 @@
 #include "dataset.h"
 #include "general_functions.h"
 #include "hamerly_kmeans.h"
-#include "hplus_kmeans.h"
+#include "geo_kmeans.h"
 #include "elkan_kmeans.h"
 #include <iostream>
 #include <fstream>
@@ -64,14 +64,16 @@ int main(int argc, char **argv){
     }
 
     assign(*x, *c, assignment);
+//    std::cout<< *(x->data+3);
     delete c;
     algorithm = new HamerlyKmeans();
     execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
-    delete algorithm;
-    Kmeans *algorithm2 = NULL;
-    algorithm = new ElkanKmeans();
-    execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
 
+    delete algorithm;
+    OriginalSpaceKmeans *algorithm2 = NULL;
+    algorithm2 = new GeoKmeans();
+    execute(algorithm2, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+    std::cout<<(*(algorithm2->centers))(0,1);
 }
 
 rusage get_time() {
