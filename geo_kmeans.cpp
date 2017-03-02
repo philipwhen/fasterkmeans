@@ -168,16 +168,18 @@ void GeoKmeans::update_bounds(int startNdx, int endNdx) {
     }
 }
 
-double GeoKmeans::getupdate(int j, double r){
-    if ((*centers)(j,0) <= r) {
-        return std::max(0.0,std::min(2.0, 2*(r-(*centers)(j,1))));
-    }
+double GeoKmeans::getupdatefor2d(int j, double r, double lm){
+    double cix = (*centers)(j,0);
     double ciy = (*centers)(j,1);
-    if ((*centers)(j,1) > r) {
-        ciy = ciy -1;
+
+    if (cix <= r) {
+        return std::max(0.0,std::min(lm, 2*(r-ciy)));
     }
-    return 2;
-
-
+    if (ciy > r) {
+        ciy = ciy -lm/2;
+    }
+    double result = (cix*r-ciy*sqrt(cix*cix+ciy*ciy-r*r))/(cix*cix+ciy*ciy) ;
+    result = result*lm;
+    return result;
 }
 
