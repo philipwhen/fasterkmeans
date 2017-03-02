@@ -211,6 +211,13 @@ double GeoKmeans::getupdateformd(int i, int j, double r, double lm){
     double ciy = 1-2*t;
     double rs = r*2/sqrt(djj2);
 
+    if (cix <= rs) {
+        return std::max(0.0,std::min(sqrt(djj2), 2*(rs-ciy)));
+    }
+    if (ciy > rs) {
+        ciy = ciy -sqrt(djj2)/2;
+    }
+
     double result = (cix*rs-ciy*sqrt(cix*cix+ciy*ciy-rs*rs))/(cix*cix+ciy*ciy) ;
     result = result*sqrt(djj2);
 
