@@ -19,6 +19,8 @@ class GeoKmeans : public TriangleInequalityBaseKmeans {
         virtual std::string getName() const { return "geo"; }
 
     protected:
+
+
         // Update the upper and lower bounds for the given range of points.
         void update_bounds(int startNdx, int endNdx);
 

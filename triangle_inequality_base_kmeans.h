@@ -14,7 +14,7 @@
 
 class TriangleInequalityBaseKmeans : public OriginalSpaceKmeans {
     public:
-        TriangleInequalityBaseKmeans() : numLowerBounds(0), s(NULL), upper(NULL), lower(NULL) {}
+        TriangleInequalityBaseKmeans() : numLowerBounds(0), s(NULL), upper(NULL), lower(NULL), m(NULL) {}
         virtual ~TriangleInequalityBaseKmeans() { free(); }
 
         virtual void initialize(Dataset const *aX, unsigned short aK, unsigned short *initialAssignment, int aNumThreads);
@@ -37,6 +37,8 @@ class TriangleInequalityBaseKmeans : public OriginalSpaceKmeans {
         // the centers being tracked for lower bounds, which may be 1 to k.
         // Actual size is n * numLowerBounds.
         double *lower;
+
+        double *m;
 
 };
 

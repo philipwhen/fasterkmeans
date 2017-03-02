@@ -37,7 +37,7 @@ int main(int argc, char **argv){
 //    int maxIterations = 500;
     xcNdx++;
     std::string dataFilename;
-    dataFilename = "/home/philip/Desktop/testkmeans/smallDataset.txt";
+    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/test_data_uniform_1250000_2.txt";
     std::ifstream input(dataFilename.c_str());
 
     int n = 1000;

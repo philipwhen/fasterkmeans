@@ -38,6 +38,7 @@
  * Return value: the number of iterations performed (always at least 1)
  */
 // this version only updates center locations when necessary
+
 int GeoKmeans::runThread(int threadId, int maxIterations) {
     int iterations = 0;
 
@@ -68,7 +69,10 @@ int GeoKmeans::runThread(int threadId, int maxIterations) {
             // otherwise, compute the real distance between this record and its
             // closest center, and update upper
             double u2 = pointCenterDist2(i, closest);
+
             upper[i] = sqrt(u2);
+
+            m[closest] = std::max(m[closest], upper[i]);
 
             // if (u(x) <= s(c(x))) or (u(x) <= lower(x)), then ignore x
             if (upper[i] <= upper_comparison_bound) {
@@ -81,6 +85,9 @@ int GeoKmeans::runThread(int threadId, int maxIterations) {
                 if (j == closest) { continue; }
 
                 double dist2 = pointCenterDist2(i, j);
+
+                double ij = sqrt(dist2);
+                m[j] = std::max(m[j], ij);
 
                 if (dist2 < u2) {
                     // another center is closer than the current assignment
@@ -143,6 +150,7 @@ int GeoKmeans::runThread(int threadId, int maxIterations) {
  */
 void GeoKmeans::update_bounds(int startNdx, int endNdx) {
     int furthestMovingCenter = 0;
+
     double longest = centerMovement[furthestMovingCenter];
     double secondLongest = 0.0;
     for (int j = 0; j < k; ++j) {
@@ -164,7 +172,10 @@ void GeoKmeans::update_bounds(int startNdx, int endNdx) {
         // moved, unless the furthest-moving center is the one it's assigned
         // to. In the latter case, the lower bound decreases by the amount
         // of the second-furthest-moving center.
-        lower[i] -= (assignment[i] == furthestMovingCenter) ? secondLongest : longest;
+        int j = assignment[i];
+        double update = getupdatefor2d(j, m[j], longest);
+        lower[i] -= update;
+//        lower[i] -= (assignment[i] == furthestMovingCenter) ? secondLongest : longest;
     }
 }
 
