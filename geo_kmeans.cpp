@@ -194,3 +194,26 @@ double GeoKmeans::getupdatefor2d(int j, double r, double lm){
     return result;
 }
 
+double GeoKmeans::getupdateformd(int i, int j, double r, double lm){
+    double *dij = new double[d];
+    double *djj = new double[d];
+    double *tcjj = new double[d];
+    double djj2 = 0.0;
+
+    double t = std::inner_product(dij, dij+d, djj, 0.0)/djj2;
+    double d = 0.0;
+    for (int dim = 0; dim < k; dim++){
+        d+=(tcjj[dim]-dij[dim])*(tcjj[dim]-dij[dim]);
+    }
+    d = sqrt(d);
+
+    double cix = d*2/sqrt(djj2);
+    double ciy = 1-2*t;
+    double rs = r*2/sqrt(djj2);
+
+    double result = (cix*rs-ciy*sqrt(cix*cix+ciy*ciy-rs*rs))/(cix*cix+ciy*ciy) ;
+    result = result*sqrt(djj2);
+
+    return result;
+}
+
