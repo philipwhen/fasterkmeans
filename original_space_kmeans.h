@@ -22,6 +22,7 @@ class OriginalSpaceKmeans : public Kmeans {
     public:
         OriginalSpaceKmeans();
         Dataset *centers;
+        Dataset *cmv;
         virtual ~OriginalSpaceKmeans() { free(); }
         virtual void free();
         virtual void initialize(Dataset const *aX, unsigned short aK, unsigned short *initialAssignment, int aNumThreads);

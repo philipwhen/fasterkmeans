@@ -8,6 +8,7 @@
 #include "general_functions.h"
 #include <cmath>
 #include <algorithm>
+#include <numeric>
 
 /* Hamerly's algorithm that is a 'simplification' of Elkan's, in that it keeps
  * the following bounds:
@@ -173,7 +174,10 @@ void GeoKmeans::update_bounds(int startNdx, int endNdx) {
         // to. In the latter case, the lower bound decreases by the amount
         // of the second-furthest-moving center.
         int j = assignment[i];
-        double update = getupdatefor2d(j, m[j], longest);
+//       double update = getupdatefor2d(j, m[j], longest);
+//        lower[i] -= update;
+
+        double update = getupdateformd(j, furthestMovingCenter, m[j], 0);
         lower[i] -= update;
 //        lower[i] -= (assignment[i] == furthestMovingCenter) ? secondLongest : longest;
     }
@@ -195,19 +199,43 @@ double GeoKmeans::getupdatefor2d(int j, double r, double lm){
 }
 
 double GeoKmeans::getupdateformd(int i, int j, double r, double lm){
+
     double *dij = new double[d];
     double *djj = new double[d];
     double *tcjj = new double[d];
+    std::fill(dij,dij+d,0.0);
+    std::fill(djj,djj+d,0.0);
+    std::fill(tcjj, tcjj+d,0.0);
     double djj2 = 0.0;
 
-    double t = std::inner_product(dij, dij+d, djj, 0.0)/djj2;
-    double d = 0.0;
-    for (int dim = 0; dim < k; dim++){
-        d+=(tcjj[dim]-dij[dim])*(tcjj[dim]-dij[dim]);
+    for (int dim = 0; dim < d; dim++){
+        dij[dim] = (*centers)(i,dim) - (*centers)(j,dim);
     }
-    d = sqrt(d);
 
-    double cix = d*2/sqrt(djj2);
+    for (int dim = 0; dim < d; dim++){
+        djj[dim] = (*cmv)(j,dim);
+    }
+
+    for (int dim = 0; dim < d; dim++){
+        djj2 += djj[dim]*djj[dim];
+    }
+
+    double t = std::inner_product(dij, dij+d, djj, 0.0)/djj2;
+
+    for (int dim = 0; dim < d; dim++){
+        tcjj[dim] = t*djj[dim];
+    }
+
+
+
+
+    double dist = 0.0;
+    for (int dim = 0; dim < d; dim++){
+        dist+=(tcjj[dim]-dij[dim])*(tcjj[dim]-dij[dim]);
+    }
+    dist = sqrt(dist);
+
+    double cix = dist*2/sqrt(djj2);
     double ciy = 1-2*t;
     double rs = r*2/sqrt(djj2);
 
@@ -223,4 +251,3 @@ double GeoKmeans::getupdateformd(int i, int j, double r, double lm){
 
     return result;
 }
-
