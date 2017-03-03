@@ -203,51 +203,46 @@ double GeoKmeans::getupdateformd(int i, int j, double r, double lm){
     double *dij = new double[d];
     double *djj = new double[d];
     double *tcjj = new double[d];
-    std::fill(dij,dij+d,0.0);
-    std::fill(djj,djj+d,0.0);
-    std::fill(tcjj, tcjj+d,0.0);
+//    std::fill(dij,dij+d,0.0);
+//    std::fill(djj,djj+d,0.0);
+//    std::fill(tcjj, tcjj+d,0.0);
     double djj2 = 0.0;
 
     for (int dim = 0; dim < d; dim++){
         dij[dim] = (*centers)(i,dim) - (*centers)(j,dim);
-    }
-
-    for (int dim = 0; dim < d; dim++){
         djj[dim] = (*cmv)(j,dim);
-    }
-
-    for (int dim = 0; dim < d; dim++){
         djj2 += djj[dim]*djj[dim];
     }
 
+
     double t = std::inner_product(dij, dij+d, djj, 0.0)/djj2;
+
+    double dist = 0.0;
 
     for (int dim = 0; dim < d; dim++){
         tcjj[dim] = t*djj[dim];
-    }
-
-
-
-
-    double dist = 0.0;
-    for (int dim = 0; dim < d; dim++){
         dist+=(tcjj[dim]-dij[dim])*(tcjj[dim]-dij[dim]);
+
     }
+
     dist = sqrt(dist);
 
-    double cix = dist*2/sqrt(djj2);
+    double scale = sqrt(djj2);
+
+    double cix = dist*2/scale;
     double ciy = 1-2*t;
-    double rs = r*2/sqrt(djj2);
+    double rs = r*2/scale;
 
     if (cix <= rs) {
-        return std::max(0.0,std::min(sqrt(djj2), 2*(rs-ciy)));
+        return std::max(0.0,std::min(scale, 2*(rs-ciy)));
     }
     if (ciy > rs) {
-        ciy = ciy -sqrt(djj2)/2;
+        ciy = ciy -scale/2;
     }
 
     double result = (cix*rs-ciy*sqrt(cix*cix+ciy*ciy-rs*rs))/(cix*cix+ciy*ciy) ;
-    result = result*sqrt(djj2);
+    result = result*scale;
 
     return result;
+
 }
