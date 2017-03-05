@@ -38,9 +38,11 @@ int HplusKmeans::runThread(int threadId, int maxIterations){
                 if (dist2 < u2){
                     l2 = u2;
                     u2 = dist2;
+                    secondclosest[i] = closest;
                     closest = j;
                 }else if (dist2 < l2){
                     l2 = dist2;
+                    secondclosest[i] = j;
                 }
 
             }
@@ -48,7 +50,6 @@ int HplusKmeans::runThread(int threadId, int maxIterations){
 
             if (assignment[i] != closest){
                 upper[i] = sqrt(u2);
-                secondclosest[i] = assignment[i];
                 changeAssignment(i, closest, threadId);
             }
         }
@@ -73,26 +74,31 @@ int HplusKmeans::runThread(int threadId, int maxIterations){
 }
 
 void HplusKmeans::update_bounds(int startNdx, int endNdx){
-    int furthestMovingCenter = 0;
-    double longest = centerMovement[furthestMovingCenter];
-    double secondLongest = 0.0;
-    for (int j = 0; j < k; ++j){
-        if (longest < centerMovement[j]){
-            secondLongest = longest;
-            longest = centerMovement[j];
-        }else if (secondLongest < centerMovement[j]){
-            secondLongest = centerMovement[j];
-        }
-    }
+//    int furthestMovingCenter = 0;
+//    double longest = centerMovement[furthestMovingCenter];
+//    double secondLongest = 0.0;
+//    for (int j = 0; j < k; ++j){
+//        if (longest < centerMovement[j]){
+//            secondLongest = longest;
+//            longest = centerMovement[j];
+//        }else if (secondLongest < centerMovement[j]){
+//            secondLongest = centerMovement[j];
+//        }
+//   }
 
     for (int i = startNdx; i < endNdx; ++i){
 //        upper[i] += centerMovement[assignment[i]];
         double sum = 0.0;
+        double sum1 = 0.0;
         for (int dim = 0; dim < d; dim++){
             sum += (*(x->data + i*d + dim) -(*centers)(assignment[i], dim)) * (*cmv)(assignment[i], dim);
+            sum1 += (*(x->data + i*d + dim) -(*centers)(secondclosest[i], dim)) * (*cmv)(secondclosest[i], dim);
         }
         if (sum < 0.0){upper[i] += centerMovement[assignment[i]];}
-        lower[i] -= (assignment[i] == furthestMovingCenter) ? secondLongest : longest;
+
+        if (sum1 > 0.0){lower[i] -= centerMovement[secondclosest[i]];}
+
+//        lower[i] -= (assignment[i] == furthestMovingCenter) ? secondLongest : longest;
 
     }
 }
