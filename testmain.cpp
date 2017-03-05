@@ -65,11 +65,14 @@ int main(int argc, char **argv){
 
     assign(*x, *c, assignment);
     delete c;
-    algorithm = new HplusKmeans();
+    algorithm = new HamerlyKmeans();
     execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
- //   delete algorithm;
+    delete algorithm;
+    Kmeans *algorithm2 = NULL;
+    algorithm = new ElkanKmeans();
+    execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+    delete algorithm;
     Kmeans *algorithm2 = new HamerlyKmeans();
-//    algorithm = new ElkanKmeans();
     execute(algorithm2, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
 
 }
@@ -135,7 +138,6 @@ void execute(Kmeans *algorithm, Dataset *x, unsigned short k, unsigned short con
     double start_wall_time = get_wall_time();
     algorithm->initialize(x,k,workingassignment, numthreads);
     int iterations = algorithm->run(maxIterations);
-//    int iterations = algorithm->runThread(0, maxIterations);
     double cluster_time = elapsed_time(&start_time);
     double cluster_wall_time = get_wall_time() - start_wall_time;
     std::cout << std::setw(5) << iterations << "\t";

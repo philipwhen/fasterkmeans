@@ -38,7 +38,6 @@ class TriangleInequalityBaseKmeans : public OriginalSpaceKmeans {
         // Actual size is n * numLowerBounds.
         double *lower;
 
-        int *secondclosest;
 };
 
 #endif
