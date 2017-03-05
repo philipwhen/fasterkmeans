@@ -48,7 +48,7 @@ int HplusKmeans::runThread(int threadId, int maxIterations){
 
             if (assignment[i] != closest){
                 upper[i] = sqrt(u2);
-                secondclosest[i] = assignment[i];
+//                secondclosest[i] = assignment[i];
                 changeAssignment(i, closest, threadId);
             }
         }
