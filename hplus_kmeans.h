@@ -7,10 +7,10 @@ class HplusKmeans : public TriangleInequalityBaseKmeans {
         HplusKmeans() { numLowerBounds = 1;}
         virtual ~HplusKmeans() { free();}
         virtual std::string getName() const { return "hplus";}
-        int executethread(int threadId, int maxIterations, Dataset *x);
+//        int executethread(int threadId, int maxIterations, Dataset *x);
 
     protected:
-        void update_bounds(int startNdx, int endNdx, Dataset *x);
+        void update_bounds(int startNdx, int endNdx);
         virtual int runThread(int threadId, int maxIterations);
 //        int executethread(int threadId, int maxIterations, Dataset *x);
 

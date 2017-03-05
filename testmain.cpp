@@ -55,8 +55,8 @@ int main(int argc, char **argv){
     k = 10;
     std::string method = "kmeansplusplus";
     Dataset *c = NULL;
-    c = init_centers(*x, k);
-
+//    c = init_centers(*x, k);
+    c = init_centers_kmeanspp_v2(*x, k);
     delete [] assignment;
     assignment = new unsigned short[x->n];
     for (int i = 0; i < x->n; i++){
@@ -71,6 +71,9 @@ int main(int argc, char **argv){
     Kmeans *algorithm2 = NULL;
     algorithm = new ElkanKmeans();
     execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+    delete algorithm;
+    Kmeans *algorithm2 = new HamerlyKmeans();
+    execute(algorithm2, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
 
 }
 
