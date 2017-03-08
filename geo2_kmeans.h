@@ -1,5 +1,5 @@
-#ifndef GEO_KMEANS_H
-#define GEO_KMEANS_H
+#ifndef GEO2_KMEANS_H
+#define GEO2_KMEANS_H
 
 /* Authors: Greg Hamerly and Jonathan Drake
  * Feedback: hamerly@cs.baylor.edu
@@ -12,11 +12,11 @@
 
 #include "triangle_inequality_base_kmeans.h"
 
-class GeoKmeans : public TriangleInequalityBaseKmeans {
+class Geo2Kmeans : public TriangleInequalityBaseKmeans {
     public:
-        GeoKmeans() { numLowerBounds = 1; }
-        virtual ~GeoKmeans() { free(); }
-        virtual std::string getName() const { return "geo"; }
+        Geo2Kmeans() { numLowerBounds = 1; }
+        virtual ~Geo2Kmeans() { free(); }
+        virtual std::string getName() const { return "geo2"; }
 
     protected:
 
@@ -26,7 +26,7 @@ class GeoKmeans : public TriangleInequalityBaseKmeans {
 
         virtual int runThread(int threadId, int maxIterations);
         double getupdatefor2d(int j, double r, double lm);
-        double getupdateformd(int i, int j, double r);
+        double getupdateformd(int i, int j, double r, double lm);
 };
 
 #endif

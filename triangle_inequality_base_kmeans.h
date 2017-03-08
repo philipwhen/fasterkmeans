@@ -39,6 +39,7 @@ class TriangleInequalityBaseKmeans : public OriginalSpaceKmeans {
         double *lower;
 
         double *m;
+        int *secondclosest;
 
 };
 

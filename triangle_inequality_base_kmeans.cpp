@@ -71,6 +71,7 @@ void TriangleInequalityBaseKmeans::initialize(Dataset const *aX, unsigned short 
     upper = new double[n];
     lower = new double[n * numLowerBounds];
     m = new double[k];
+    secondclosest = new int[n];
 
     // start with invalid bounds and assignments which will force the first
     // iteration of k-means to do all its standard work
@@ -78,5 +79,6 @@ void TriangleInequalityBaseKmeans::initialize(Dataset const *aX, unsigned short 
     std::fill(upper, upper + n, std::numeric_limits<double>::max());
     std::fill(lower, lower + n * numLowerBounds, 0.0);
     std::fill(m, m+k, 0.0);
+    std::fill(secondclosest, secondclosest+n, 0);
 }
 

@@ -4,7 +4,7 @@ MAKEFLAGS = -j 8
 # Compiler options
 CPPFLAGS = -Wall -Werror -pedantic
 CPPFLAGS += -g
-CPPFLAGS += -O3
+CPPFLAGS += -Ofast
 CPPFLAGS += -Wno-long-long
 
 # Verify algorithm correctness while debugging

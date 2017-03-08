@@ -2,6 +2,7 @@
 #include "general_functions.h"
 #include "hamerly_kmeans.h"
 #include "geo_kmeans.h"
+#include "geo2_kmeans.h"
 #include "elkan_kmeans.h"
 #include <iostream>
 #include <fstream>
@@ -27,17 +28,17 @@ int main(int argc, char **argv){
     unsigned short *assignment = NULL;
     unsigned short k;
 
-    Kmeans *algorithm = NULL;
+    OriginalSpaceKmeans *algorithm = NULL;
 
     std::vector<int> numItersHistory;
 
     int xcNdx = 0;
     int numthread = 1;
     int maxIterations = std::numeric_limits<int>::max();
-//    int maxIterations = 500;
+//    int maxIterations = 10;
     xcNdx++;
     std::string dataFilename;
-//    dataFilename = "/home/philip/Desktop/geokmeans/fasterkmeans/smallDataset.txt";
+//    dataFilename = "/home/philip/Desktop/dataset/europediff.txt";
     dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/test_data_uniform_1250000_2.txt";
 
     std::ifstream input(dataFilename.c_str());
@@ -67,9 +68,9 @@ int main(int argc, char **argv){
     assign(*x, *c, assignment);
 //    std::cout<< *(x->data+3);
     delete c;
-    algorithm = new HamerlyKmeans();
+    algorithm = new Geo2Kmeans();
     execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
-
+    std::cout<<(*(algorithm->centers))(0,1);
     delete algorithm;
     OriginalSpaceKmeans *algorithm2 = NULL;
     algorithm2 = new GeoKmeans();

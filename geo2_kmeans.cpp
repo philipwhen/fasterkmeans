@@ -4,7 +4,7 @@
  * Copyright 2014
  */
 
-#include "geo_kmeans.h"
+#include "geo2_kmeans.h"
 #include "general_functions.h"
 #include <cmath>
 #include <algorithm>
@@ -40,7 +40,7 @@
  */
 // this version only updates center locations when necessary
 
-int GeoKmeans::runThread(int threadId, int maxIterations) {
+int Geo2Kmeans::runThread(int threadId, int maxIterations) {
     int iterations = 0;
 
     int startNdx = start(threadId);
@@ -100,13 +100,13 @@ int GeoKmeans::runThread(int threadId, int maxIterations) {
 
                     // adjust the upper bound and the current assignment
                     u2 = dist2;
-//                    secondclosest[i] = closest;
+                    secondclosest[i] = closest;
                     closest = j;
                 } else if (dist2 < l2) {
                     // we must reduce the lower bound on the distance to the
                     // *second* closest center to x[i]
                     l2 = dist2;
-//                    secondclosest[i] = j;
+                    secondclosest[i] = j;
                 }
             }
 
@@ -151,22 +151,20 @@ int GeoKmeans::runThread(int threadId, int maxIterations) {
  *
  * Parameters: none
  */
-void GeoKmeans::update_bounds(int startNdx, int endNdx) {
-    int furthestMovingCenter = 0;
+void Geo2Kmeans::update_bounds(int startNdx, int endNdx) {
+//    int furthestMovingCenter = 0;
 
-    double longest = centerMovement[furthestMovingCenter];
-    double secondLongest = 0.0;
-    for (int j = 0; j < k; ++j) {
-        if (longest < centerMovement[j]) {
-            secondLongest = longest;
-            longest = centerMovement[j];
-            furthestMovingCenter = j;
-        } else if (secondLongest < centerMovement[j]) {
-            secondLongest = centerMovement[j];
-        }
-    }
-
-
+//    double longest = centerMovement[furthestMovingCenter];
+//    double secondLongest = 0.0;
+//    for (int j = 0; j < k; ++j) {
+//        if (longest < centerMovement[j]) {
+//            secondLongest = longest;
+//            longest = centerMovement[j];
+//            furthestMovingCenter = j;
+//        } else if (secondLongest < centerMovement[j]) {
+ //           secondLongest = centerMovement[j];
+ //       }
+ //   }
 
     // update upper/lower bounds
     for (int i = startNdx; i < endNdx; ++i) {
@@ -178,18 +176,16 @@ void GeoKmeans::update_bounds(int startNdx, int endNdx) {
         // to. In the latter case, the lower bound decreases by the amount
         // of the second-furthest-moving center.
         int j = assignment[i];
-//        int k = secondclosest[i];
-//        double update = getupdatefor2d(j, m[j], longest);
-//                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     double update = getupdatefor2d(j, m[j], longest);
-//        lower[i] -= update;
+        int k = secondclosest[i];
+//        double update = getupdatefor2d(j, m[j], centerMovement[k]);
 
-        double update = getupdateformd(j, furthestMovingCenter, m[j]);
+        double update = getupdateformd(j, k, m[j], centerMovement[k]);
         lower[i] -= update;
 //        lower[i] -= (assignment[i] == furthestMovingCenter) ? secondLongest : longest;
     }
 }
 
-double GeoKmeans::getupdatefor2d(int j, double r, double lm){
+double Geo2Kmeans::getupdatefor2d(int j, double r, double lm){
     double cix = (*centers)(j,0);
     double ciy = (*centers)(j,1);
 
@@ -204,7 +200,7 @@ double GeoKmeans::getupdatefor2d(int j, double r, double lm){
     return result;
 }
 
-double GeoKmeans::getupdateformd(int i, int j, double r){
+double Geo2Kmeans::getupdateformd(int i, int j, double r, double cm){
 
     double *dij = new double[d];
     double *djj = new double[d];
@@ -212,12 +208,12 @@ double GeoKmeans::getupdateformd(int i, int j, double r){
 //    std::fill(dij,dij+d,0.0);
 //    std::fill(djj,djj+d,0.0);
 //    std::fill(tcjj, tcjj+d,0.0);
-    double djj2 = 0.0;
+    double djj2 = cm*cm;
+    double scale = cm;
 
     for (int dim = 0; dim < d; dim++){
         dij[dim] = (*centers)(i,dim) - (*centers)(j,dim);
         djj[dim] = (*cmv)(j,dim);
-        djj2 += djj[dim]*djj[dim];
     }
 
 
@@ -232,8 +228,6 @@ double GeoKmeans::getupdateformd(int i, int j, double r){
     }
 
     dist = sqrt(dist);
-
-    double scale = sqrt(djj2);
 
     double cix = dist*2/scale;
     double ciy = 1-2*t;
