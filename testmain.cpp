@@ -38,13 +38,13 @@ int main(int argc, char **argv){
 //    int maxIterations = 10;
     xcNdx++;
     std::string dataFilename;
-//    dataFilename = "/home/philip/Desktop/dataset/europediff.txt";
-    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/test_data_uniform_1250000_2.txt";
+//    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/test_data_uniform_1250000_32.txt";
+    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/mnist_50_6000.txt";
 
     std::ifstream input(dataFilename.c_str());
 
-    int n = 1250000;
-    int d = 2;
+    int n = 6000;
+    int d = 50;
     delete x;
     delete [] assignment;
     assignment = NULL;
@@ -70,12 +70,18 @@ int main(int argc, char **argv){
     delete c;
     algorithm = new Geo2Kmeans();
     execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
-    std::cout<<(*(algorithm->centers))(0,1);
+    std::cout<<(*(algorithm->centers))(0,2);
     delete algorithm;
     OriginalSpaceKmeans *algorithm2 = NULL;
     algorithm2 = new GeoKmeans();
     execute(algorithm2, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
-    std::cout<<(*(algorithm2->centers))(0,1);
+    std::cout<<(*(algorithm2->centers))(0,2);
+    delete algorithm2;
+    OriginalSpaceKmeans *algorithm3 = NULL;
+    algorithm3 = new HamerlyKmeans();
+    execute(algorithm3, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+    std::cout<<(*(algorithm3->centers))(0,2);
+    delete algorithm3;
 }
 
 rusage get_time() {

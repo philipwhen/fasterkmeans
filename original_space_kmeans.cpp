@@ -10,7 +10,7 @@
 #include <cassert>
 #include <numeric>
 
-OriginalSpaceKmeans::OriginalSpaceKmeans() : centers(NULL), sumNewCenters(NULL) { }
+OriginalSpaceKmeans::OriginalSpaceKmeans() : centers(NULL), cmv(NULL), sumNewCenters(NULL) { }
 
 void OriginalSpaceKmeans::free() {
     for (int t = 0; t < numThreads; ++t) {
@@ -18,8 +18,10 @@ void OriginalSpaceKmeans::free() {
     }
     Kmeans::free();
     delete centers;
+    delete cmv;
     delete [] sumNewCenters;
     centers = NULL;
+    cmv = NULL;
     sumNewCenters = NULL;
 }
 

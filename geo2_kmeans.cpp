@@ -202,12 +202,12 @@ double Geo2Kmeans::getupdatefor2d(int j, double r, double lm){
 
 double Geo2Kmeans::getupdateformd(int i, int j, double r, double cm){
 
-    double *dij = new double[d];
-    double *djj = new double[d];
-    double *tcjj = new double[d];
-//    std::fill(dij,dij+d,0.0);
-//    std::fill(djj,djj+d,0.0);
-//    std::fill(tcjj, tcjj+d,0.0);
+//    double *dij = new double[d];
+//    double *djj = new double[d];
+//    double *tcjj = new double[d];
+    std::fill(dij,dij+d,0.0);
+    std::fill(djj,djj+d,0.0);
+    std::fill(tcjj, tcjj+d,0.0);
     double djj2 = cm*cm;
     double scale = cm;
 

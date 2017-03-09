@@ -15,10 +15,13 @@ void TriangleInequalityBaseKmeans::free() {
     delete [] s;
     delete [] upper;
     delete [] lower;
-//    delete [] secondclosest;
+    delete [] m;
+    delete [] secondclosest;
     s = NULL;
     upper = NULL;
     lower = NULL;
+    m = NULL;
+    secondclosest = NULL;
 }
 
 /* This function computes the inter-center distances, keeping only the closest
@@ -72,6 +75,9 @@ void TriangleInequalityBaseKmeans::initialize(Dataset const *aX, unsigned short 
     lower = new double[n * numLowerBounds];
     m = new double[k];
     secondclosest = new int[n];
+    dij = new double[d];
+    djj = new double[d];
+    tcjj = new double[d];
 
     // start with invalid bounds and assignments which will force the first
     // iteration of k-means to do all its standard work

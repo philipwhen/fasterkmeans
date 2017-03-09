@@ -21,8 +21,7 @@
 class OriginalSpaceKmeans : public Kmeans {
     public:
         OriginalSpaceKmeans();
-        Dataset *centers;
-        Dataset *cmv;
+
         virtual ~OriginalSpaceKmeans() { free(); }
         virtual void free();
         virtual void initialize(Dataset const *aX, unsigned short aK, unsigned short *initialAssignment, int aNumThreads);
@@ -30,6 +29,8 @@ class OriginalSpaceKmeans : public Kmeans {
         virtual double pointPointInnerProduct(int x1ndx, int x2ndx) const;
         virtual double pointCenterInnerProduct(int xndx, unsigned short cndx) const;
         virtual double centerCenterInnerProduct(unsigned short c1ndx, unsigned short c2ndx) const;
+        Dataset *centers;
+        Dataset *cmv;
 
     protected:
         // Move the centers to the average of their current assigned points,

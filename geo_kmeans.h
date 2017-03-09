@@ -26,7 +26,8 @@ class GeoKmeans : public TriangleInequalityBaseKmeans {
 
         virtual int runThread(int threadId, int maxIterations);
         double getupdatefor2d(int j, double r, double lm);
-        double getupdateformd(int i, int j, double r);
+        double getupdateformd(int i, int j, double r, double cm);
+
 };
 
 #endif

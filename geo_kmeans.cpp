@@ -183,7 +183,7 @@ void GeoKmeans::update_bounds(int startNdx, int endNdx) {
 //                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     double update = getupdatefor2d(j, m[j], longest);
 //        lower[i] -= update;
 
-        double update = getupdateformd(j, furthestMovingCenter, m[j]);
+        double update = getupdateformd(j, furthestMovingCenter, m[j], centerMovement[furthestMovingCenter]);
         lower[i] -= update;
 //        lower[i] -= (assignment[i] == furthestMovingCenter) ? secondLongest : longest;
     }
@@ -204,20 +204,22 @@ double GeoKmeans::getupdatefor2d(int j, double r, double lm){
     return result;
 }
 
-double GeoKmeans::getupdateformd(int i, int j, double r){
+double GeoKmeans::getupdateformd(int i, int j, double r, double cm){
 
-    double *dij = new double[d];
-    double *djj = new double[d];
-    double *tcjj = new double[d];
-//    std::fill(dij,dij+d,0.0);
-//    std::fill(djj,djj+d,0.0);
-//    std::fill(tcjj, tcjj+d,0.0);
-    double djj2 = 0.0;
+//    double *dij = new double[d];
+//    double *djj = new double[d];
+//    double *tcjj = new double[d];
+    std::fill(dij,dij+d,0.0);
+    std::fill(djj,djj+d,0.0);
+    std::fill(tcjj, tcjj+d,0.0);
+//    double djj2 = 0.0;
+    double djj2 = cm*cm;
+    double scale = cm;
 
     for (int dim = 0; dim < d; dim++){
         dij[dim] = (*centers)(i,dim) - (*centers)(j,dim);
         djj[dim] = (*cmv)(j,dim);
-        djj2 += djj[dim]*djj[dim];
+//        djj2 += djj[dim]*djj[dim];
     }
 
 
@@ -233,7 +235,7 @@ double GeoKmeans::getupdateformd(int i, int j, double r){
 
     dist = sqrt(dist);
 
-    double scale = sqrt(djj2);
+//    double scale = sqrt(djj2);
 
     double cix = dist*2/scale;
     double ciy = 1-2*t;
