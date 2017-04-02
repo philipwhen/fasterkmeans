@@ -34,7 +34,6 @@ int main(int argc, char **argv){
     int xcNdx = 0;
     int numthread = 1;
     int maxIterations = std::numeric_limits<int>::max();
-//    int maxIterations = 500;
     xcNdx++;
     std::string dataFilename;
 //    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/mnist_60000_50.txt";
@@ -138,7 +137,6 @@ void execute(Kmeans *algorithm, Dataset *x, unsigned short k, unsigned short con
     double start_wall_time = get_wall_time();
     algorithm->initialize(x,k,workingassignment, numthreads);
     int iterations = algorithm->run(maxIterations);
-//    int iterations = algorithm->runThread(0, maxIterations);
     double cluster_time = elapsed_time(&start_time);
     double cluster_wall_time = get_wall_time() - start_wall_time;
     std::cout << std::setw(5) << iterations << "\t";

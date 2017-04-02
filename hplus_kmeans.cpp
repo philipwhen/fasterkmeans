@@ -2,7 +2,7 @@
 #include "general_functions.h"
 #include <cmath>
 
-//int HplusKmeans::runThread(int x, int y){ std::cout << "hello"; return 0;}
+
 int HplusKmeans::runThread(int threadId, int maxIterations){
     int iterations = 0;
 
@@ -88,16 +88,16 @@ void HplusKmeans::update_bounds(int startNdx, int endNdx){
     }
 
     for (int i = startNdx; i < endNdx; ++i){
-//        upper[i] += centerMovement[assignment[i]];
+        upper[i] += centerMovement[assignment[i]];
         double sum = 0.0;
-//        double sum1 = 0.0;
+        double sum1 = 0.0;
         for (int dim = 0; dim < d; dim++){
             sum += (*(x->data + i*d + dim) -(*centers)(assignment[i], dim)) * (*cmv)(assignment[i], dim);
-//            sum1 += (*(x->data + i*d + dim) -(*centers)(secondclosest[i], dim)) * (*cmv)(secondclosest[i], dim);
+            sum1 += (*(x->data + i*d + dim) -(*centers)(secondclosest[i], dim)) * (*cmv)(secondclosest[i], dim);
         }
         if (sum < 0.0){upper[i] += centerMovement[assignment[i]];}
 
-//        if (sum1 > 0.0){lower[i] -= centerMovement[secondclosest[i]];}
+        if (sum1 > 0.0){lower[i] -= centerMovement[secondclosest[i]];}
 
         lower[i] -= (assignment[i] == furthestMovingCenter) ? secondLongest : longest;
 
