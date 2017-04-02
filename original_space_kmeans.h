@@ -28,6 +28,7 @@ class OriginalSpaceKmeans : public Kmeans {
         virtual double pointPointInnerProduct(int x1ndx, int x2ndx) const;
         virtual double pointCenterInnerProduct(int xndx, unsigned short cndx) const;
         virtual double centerCenterInnerProduct(unsigned short c1ndx, unsigned short c2ndx) const;
+        Dataset *centers;
 
     protected:
         // Move the centers to the average of their current assigned points,
@@ -38,7 +39,7 @@ class OriginalSpaceKmeans : public Kmeans {
         virtual void changeAssignment(int xIndex, int closestCluster, int threadId);
 
         // The set of centers we are operating on.
-        Dataset *centers;
+//        Dataset *centers;
         Dataset *cmv;
 
         // sumNewCenters and centerCount provide sufficient statistics to

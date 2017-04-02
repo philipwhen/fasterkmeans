@@ -37,7 +37,7 @@ int main(int argc, char **argv){
 //    int maxIterations = 500;
     xcNdx++;
     std::string dataFilename;
-//    dataFilename = "/home/philip/Desktop/test/fasterkmeans/smallDataset.txt";
+//    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/mnist_60000_50.txt";
     dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/test_data_uniform_1250000_2.txt";
 
     std::ifstream input(dataFilename.c_str());
@@ -54,7 +54,7 @@ int main(int argc, char **argv){
         input >> x->data[i];
     }
     xcNdx++;
-    k = 10;
+    k = 50;
     std::string method = "kmeansplusplus";
     Dataset *c = NULL;
 //    c = init_centers(*x, k);
@@ -69,11 +69,12 @@ int main(int argc, char **argv){
     delete c;
     algorithm = new HplusKmeans();
     execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
- //   delete algorithm;
+//    std::cout<<(*(algorithm->centers))(1,1);
+    delete algorithm;
     Kmeans *algorithm2 = new HamerlyKmeans();
-//    algorithm = new ElkanKmeans();
-    execute(algorithm2, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
 
+    execute(algorithm2, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+//    std::cout<<(*(algorithm2->centers))(1,1);
 }
 
 rusage get_time() {
@@ -144,9 +145,13 @@ void execute(Kmeans *algorithm, Dataset *x, unsigned short k, unsigned short con
     std::cout << std::setw(10) << numthreads << "\t";
     std::cout << std::setw(10) << cluster_time << "\t";
     std::cout << std::setw(10) << cluster_wall_time << "\t";
+    std::cout << std::setw(8) << (getMemoryUsage() / 1024.0) << "\t";
  //   while (numItersHistory->size() <= (size_t)xcNdx){
  //       numItersHistory->push_back(iterations);
  //   }
+    #ifdef COUNT_DISTANCES
+    std::cout << std::setw(11) << algorithm->numDistances << "\t";
+    #endif // COUNT_DISTANCES
     std::cout << std::endl;
     delete [] workingassignment;
 

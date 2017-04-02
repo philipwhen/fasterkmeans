@@ -11,6 +11,7 @@ class HplusKmeans : public TriangleInequalityBaseKmeans {
 
     protected:
         void update_bounds(int startNdx, int endNdx);
+
         virtual int runThread(int threadId, int maxIterations);
 //        int executethread(int threadId, int maxIterations, Dataset *x);
 
