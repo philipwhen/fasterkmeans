@@ -74,18 +74,18 @@ int HplusKmeans::runThread(int threadId, int maxIterations){
 }
 
 void HplusKmeans::update_bounds(int startNdx, int endNdx){
-    int furthestMovingCenter = 0;
-    double longest = centerMovement[furthestMovingCenter];
-    double secondLongest = 0.0;
-    for (int j = 0; j < k; ++j){
-        if (longest < centerMovement[j]){
-            secondLongest = longest;
-            longest = centerMovement[j];
-            furthestMovingCenter = j;
-        }else if (secondLongest < centerMovement[j]){
-            secondLongest = centerMovement[j];
-        }
-    }
+//    int furthestMovingCenter = 0;
+//    double longest = centerMovement[furthestMovingCenter];
+//    double secondLongest = 0.0;
+//    for (int j = 0; j < k; ++j){
+//        if (longest < centerMovement[j]){
+//            secondLongest = longest;
+//            longest = centerMovement[j];
+//            furthestMovingCenter = j;
+//        }else if (secondLongest < centerMovement[j]){
+//            secondLongest = centerMovement[j];
+//        }
+//    }
 
     for (int i = startNdx; i < endNdx; ++i){
         upper[i] += centerMovement[assignment[i]];
@@ -99,7 +99,7 @@ void HplusKmeans::update_bounds(int startNdx, int endNdx){
 
         if (sum1 > 0.0){lower[i] -= centerMovement[secondclosest[i]];}
 
-        lower[i] -= (assignment[i] == furthestMovingCenter) ? secondLongest : longest;
+//        lower[i] -= (assignment[i] == furthestMovingCenter) ? secondLongest : longest;
 
     }
 
