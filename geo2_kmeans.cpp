@@ -1,43 +1,9 @@
-/* Authors: Greg Hamerly and Jonathan Drake
- * Feedback: hamerly@cs.baylor.edu
- * See: http://cs.baylor.edu/~hamerly/software/kmeans.php
- * Copyright 2014
- */
-
 #include "geo2_kmeans.h"
 #include "general_functions.h"
 #include <cmath>
 #include <algorithm>
 #include <numeric>
 
-/* Hamerly's algorithm that is a 'simplification' of Elkan's, in that it keeps
- * the following bounds:
- *  - One upper bound per clustered record on the distance between the record
- *    and its closest center. It is always greater than or equal to the true
- *    distance between the record and its closest center. This is the same as in
- *    Elkan's algorithm.
- *  - *One* lower bound per clustered record on the distance between the record
- *    and its *second*-closest center. It is always less than or equal to the
- *    true distance between the record and its second closest center. This is
- *    different information than Elkan's algorithm -- his algorithm keeps k
- *    lower bounds for each record, for a total of (n*k) lower bounds.
- *
- * The basic ideas are:
- *  - when lower(x) <= upper(x), we need to recalculate the closest centers for
- *    the record x, and reset lower(x) and upper(x) to their boundary values
- *  - whenever a center moves
- *      - calculate the distance it moves 'd'
- *      - for each record x assigned to that center, update its upper bound
- *          - upper(x) = upper(x) + d
- *  - after each iteration
- *      - find the center that has moved the most (with distance 'd')
- *      - update the lower bound for all (?) records:
- *          - lower(x) = lower(x) - d
- *
- * Parameters: none
- *
- * Return value: the number of iterations performed (always at least 1)
- */
 // this version only updates center locations when necessary
 
 int Geo2Kmeans::runThread(int threadId, int maxIterations) {
@@ -144,13 +110,6 @@ int Geo2Kmeans::runThread(int threadId, int maxIterations) {
 }
 
 
-/* This method does the following:
- *  - finds the furthest-moving center
- *  - finds the distances moved by the two furthest-moving centers
- *  - updates the upper/lower bounds for each record
- *
- * Parameters: none
- */
 void Geo2Kmeans::update_bounds(int startNdx, int endNdx) {
 //    int furthestMovingCenter = 0;
 
@@ -202,9 +161,6 @@ double Geo2Kmeans::getupdatefor2d(int j, double r, double lm){
 
 double Geo2Kmeans::getupdateformd(int i, int j, double r, double cm){
 
-//    double *dij = new double[d];
-//    double *djj = new double[d];
-//    double *tcjj = new double[d];
     std::fill(dij,dij+d,0.0);
     std::fill(djj,djj+d,0.0);
     std::fill(tcjj, tcjj+d,0.0);

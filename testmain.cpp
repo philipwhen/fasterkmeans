@@ -28,23 +28,23 @@ int main(int argc, char **argv){
     unsigned short *assignment = NULL;
     unsigned short k;
 
-    OriginalSpaceKmeans *algorithm = NULL;
+//    OriginalSpaceKmeans *algorithm = NULL;
 
     std::vector<int> numItersHistory;
 
     int xcNdx = 0;
     int numthread = 1;
     int maxIterations = std::numeric_limits<int>::max();
-//    int maxIterations = 10;
+
     xcNdx++;
     std::string dataFilename;
-//    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/test_data_uniform_1250000_32.txt";
-    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/mnist_50_6000.txt";
+//    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/test_data_uniform_1250000_2.txt";
+    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/birch_ds1_100000_2.txt";
 
     std::ifstream input(dataFilename.c_str());
 
-    int n = 6000;
-    int d = 50;
+    int n = 100000;
+    int d = 2;
     delete x;
     delete [] assignment;
     assignment = NULL;
@@ -54,7 +54,7 @@ int main(int argc, char **argv){
         input >> x->data[i];
     }
     xcNdx++;
-    k = 10;
+    k = 100;
     std::string method = "kmeansplusplus";
     Dataset *c = NULL;
     c = init_centers(*x, k);
@@ -68,20 +68,20 @@ int main(int argc, char **argv){
     assign(*x, *c, assignment);
 //    std::cout<< *(x->data+3);
     delete c;
-    algorithm = new Geo2Kmeans();
-    execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
-    std::cout<<(*(algorithm->centers))(0,2);
-    delete algorithm;
+//    algorithm = new Geo2Kmeans();
+//    execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+//    std::cout<<(*(algorithm->centers))(0,2);
+//    delete algorithm;
     OriginalSpaceKmeans *algorithm2 = NULL;
     algorithm2 = new GeoKmeans();
     execute(algorithm2, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
-    std::cout<<(*(algorithm2->centers))(0,2);
+//    std::cout<<(*(algorithm2->centers))(0,2);
     delete algorithm2;
-    OriginalSpaceKmeans *algorithm3 = NULL;
-    algorithm3 = new HamerlyKmeans();
-    execute(algorithm3, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
-    std::cout<<(*(algorithm3->centers))(0,2);
-    delete algorithm3;
+//    OriginalSpaceKmeans *algorithm3 = NULL;
+//    algorithm3 = new HamerlyKmeans();
+//    execute(algorithm3, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+//    std::cout<<(*(algorithm3->centers))(0,2);
+//    delete algorithm3;
 }
 
 rusage get_time() {
@@ -151,9 +151,13 @@ void execute(Kmeans *algorithm, Dataset *x, unsigned short k, unsigned short con
     std::cout << std::setw(10) << numthreads << "\t";
     std::cout << std::setw(10) << cluster_time << "\t";
     std::cout << std::setw(10) << cluster_wall_time << "\t";
+    std::cout << std::setw(8) << (getMemoryUsage() / 1024.0);
  //   while (numItersHistory->size() <= (size_t)xcNdx){
  //       numItersHistory->push_back(iterations);
  //   }
+    #ifdef COUNT_DISTANCES
+    std::cout << std::setw(11) << algorithm->numDistances << "\t";
+    #endif // COUNT_DISTANCES
     std::cout << std::endl;
     delete [] workingassignment;
 

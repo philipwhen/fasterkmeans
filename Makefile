@@ -16,11 +16,11 @@ CPPFLAGS += -Wno-long-long
 #LDFLAGS += -lpthread
 
 # Monitor internal algorithm effectiveness
-#CPPFLAGS += -DCOUNT_DISTANCES
+CPPFLAGS += -DCOUNT_DISTANCES
 #CPPFLAGS += -DMONITOR_ACCURACY
 
 # Enable code profiling
-#CPPFLAGS += -pg
+CPPFLAGS += -pg
 
 SRC = $(shell ls *.cpp)
 
@@ -34,7 +34,7 @@ kmeans: $(OBJS)
 .PHONY: clean all profile
 
 profile:
-	gprof kmeans | less
+	gprof kmeans 
 
 clean:
 	rm -f kmeans $(OBJS) gmon.out
