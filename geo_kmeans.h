@@ -22,7 +22,7 @@ class GeoKmeans : public TriangleInequalityBaseKmeans {
 
 
         // Update the upper and lower bounds for the given range of points.
-        void update_bounds(int startNdx, int endNdx);
+        void update_bounds(int startNdx, int endNdx, int furthestMovingCenter);
 
         virtual int runThread(int threadId, int maxIterations);
         double getupdatefor2d(int j, double r, double lm);

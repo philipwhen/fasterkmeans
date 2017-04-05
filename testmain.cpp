@@ -28,7 +28,7 @@ int main(int argc, char **argv){
     unsigned short *assignment = NULL;
     unsigned short k;
 
-//    OriginalSpaceKmeans *algorithm = NULL;
+    OriginalSpaceKmeans *algorithm = NULL;
 
     std::vector<int> numItersHistory;
 
@@ -39,12 +39,12 @@ int main(int argc, char **argv){
     xcNdx++;
     std::string dataFilename;
 //    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/test_data_uniform_1250000_2.txt";
-    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/birch_ds1_100000_2.txt";
+    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/mnist_60000_50.txt";
 
     std::ifstream input(dataFilename.c_str());
 
-    int n = 100000;
-    int d = 2;
+    int n = 60000;
+    int d = 50;
     delete x;
     delete [] assignment;
     assignment = NULL;
@@ -54,7 +54,7 @@ int main(int argc, char **argv){
         input >> x->data[i];
     }
     xcNdx++;
-    k = 100;
+    k = 10;
     std::string method = "kmeansplusplus";
     Dataset *c = NULL;
     c = init_centers(*x, k);
@@ -68,18 +68,18 @@ int main(int argc, char **argv){
     assign(*x, *c, assignment);
 //    std::cout<< *(x->data+3);
     delete c;
-//    algorithm = new Geo2Kmeans();
-//    execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+    algorithm = new GeoKmeans();
+    execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
 //    std::cout<<(*(algorithm->centers))(0,2);
-//    delete algorithm;
+    delete algorithm;
     OriginalSpaceKmeans *algorithm2 = NULL;
-    algorithm2 = new GeoKmeans();
+    algorithm2 = new Geo2Kmeans();
     execute(algorithm2, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
 //    std::cout<<(*(algorithm2->centers))(0,2);
     delete algorithm2;
-//    OriginalSpaceKmeans *algorithm3 = NULL;
-//    algorithm3 = new HamerlyKmeans();
-//    execute(algorithm3, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+    OriginalSpaceKmeans *algorithm3 = NULL;
+    algorithm3 = new HamerlyKmeans();
+    execute(algorithm3, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
 //    std::cout<<(*(algorithm3->centers))(0,2);
 //    delete algorithm3;
 }

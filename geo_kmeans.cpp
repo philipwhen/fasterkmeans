@@ -93,15 +93,15 @@ int GeoKmeans::runThread(int threadId, int maxIterations) {
         // ELKAN 4, 5, AND 6
         // calculate the new center locations
         synchronizeAllThreads();
-        if (threadId == 0) {
-            int furthestMovingCenter = move_centers();
-            converged = (0.0 == centerMovement[furthestMovingCenter]);
-        }
+//        if (threadId == 0) {
+        int furthestMovingCenter = move_centers();
+        converged = (0.0 == centerMovement[furthestMovingCenter]);
+//        }
 
         synchronizeAllThreads();
 
         if (! converged) {
-            update_bounds(startNdx, endNdx);
+            update_bounds(startNdx, endNdx, furthestMovingCenter);
         }
 
         synchronizeAllThreads();
@@ -118,20 +118,20 @@ int GeoKmeans::runThread(int threadId, int maxIterations) {
  *
  * Parameters: none
  */
-void GeoKmeans::update_bounds(int startNdx, int endNdx) {
-    int furthestMovingCenter = 0;
+void GeoKmeans::update_bounds(int startNdx, int endNdx, int furthestMovingCenter) {
+//    int furthestMovingCenter = 0;
 
-    double longest = centerMovement[furthestMovingCenter];
-    double secondLongest = 0.0;
-    for (int j = 0; j < k; ++j) {
-        if (longest < centerMovement[j]) {
-            secondLongest = longest;
-            longest = centerMovement[j];
-            furthestMovingCenter = j;
-        } else if (secondLongest < centerMovement[j]) {
-            secondLongest = centerMovement[j];
-        }
-    }
+//    double longest = centerMovement[furthestMovingCenter];
+//    double secondLongest = 0.0;
+//    for (int j = 0; j < k; ++j) {
+//        if (longest < centerMovement[j]) {
+//            secondLongest = longest;
+//            longest = centerMovement[j];
+//            furthestMovingCenter = j;
+//        } else if (secondLongest < centerMovement[j]) {
+//            secondLongest = centerMovement[j];
+//        }
+//    }
 
 
 
@@ -151,6 +151,14 @@ void GeoKmeans::update_bounds(int startNdx, int endNdx) {
 //        lower[i] -= update;
 
         double update = getupdateformd(j, furthestMovingCenter, m[j], centerMovement[furthestMovingCenter]);
+        for (int n = 0; n < k; ++n) {
+            if (centerMovement[n] <= update) {
+                break;
+            }
+            update = std::max(getupdateformd(j, n, m[j], centerMovement[n]), update);
+
+        }
+
         lower[i] -= update;
 //        lower[i] -= (assignment[i] == furthestMovingCenter) ? secondLongest : longest;
     }
