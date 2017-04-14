@@ -27,7 +27,7 @@ int main(int argc, char **argv){
     unsigned short *assignment = NULL;
     unsigned short k;
 
-    Kmeans *algorithm = NULL;
+    OriginalSpaceKmeans *algorithm = NULL;
 
     std::vector<int> numItersHistory;
 
@@ -36,13 +36,13 @@ int main(int argc, char **argv){
     int maxIterations = std::numeric_limits<int>::max();
     xcNdx++;
     std::string dataFilename;
-//    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/mnist_60000_50.txt";
-    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/test_data_uniform_1250000_2.txt";
+    dataFilename = "/home/philip/Desktop/test.txt";
+//    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/test_data_uniform_1250000_2.txt";
 
     std::ifstream input(dataFilename.c_str());
 
-    int n = 1250000;
-    int d = 2;
+    int n = 1000;
+    int d = 10;
 
     delete x;
     delete [] assignment;
@@ -53,7 +53,7 @@ int main(int argc, char **argv){
         input >> x->data[i];
     }
     xcNdx++;
-    k = 50;
+    k = 10;
     std::string method = "kmeansplusplus";
     Dataset *c = NULL;
 //    c = init_centers(*x, k);
@@ -68,12 +68,22 @@ int main(int argc, char **argv){
     delete c;
     algorithm = new HplusKmeans();
     execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
-//    std::cout<<(*(algorithm->centers))(1,1);
+    std::cout<<(*(algorithm->centers))(1,1);
+    double sum = 0;
+    for (int i = 0; i < x->n; i++){
+        sum += algorithm->pointCenterDist2(i,assignment[i]);
+    }
+    std::cout<<"k means objective is"<<sum<<"\n";
     delete algorithm;
-    Kmeans *algorithm2 = new HamerlyKmeans();
+    OriginalSpaceKmeans *algorithm2 = new HamerlyKmeans();
 
     execute(algorithm2, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
-//    std::cout<<(*(algorithm2->centers))(1,1);
+    std::cout<<(*(algorithm2->centers))(1,1);
+    sum = 0;
+    for (int i = 0; i < x->n; i++){
+        sum += algorithm2->pointCenterDist2(i,assignment[i]);
+    }
+    std::cout<<"k means objective is"<<sum<<"\n";
 }
 
 rusage get_time() {
