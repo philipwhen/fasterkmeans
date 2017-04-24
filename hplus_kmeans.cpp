@@ -88,7 +88,7 @@ void HplusKmeans::update_bounds(int startNdx, int endNdx){
 //    }
 
     for (int i = startNdx; i < endNdx; ++i){
-        upper[i] += centerMovement[assignment[i]];
+//        upper[i] += centerMovement[assignment[i]];
         double sum = 0.0;
         double sum1 = 0.0;
         for (int dim = 0; dim < d; dim++){
