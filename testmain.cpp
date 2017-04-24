@@ -14,6 +14,7 @@
 #include <sys/resource.h>
 #include <unistd.h>
 #include <vector>
+#include <string.h>
 
 void execute(Kmeans *algorithm, Dataset *x, unsigned short k, unsigned short const *assignment,
     int xcNdx,
@@ -36,13 +37,14 @@ int main(int argc, char **argv){
     int maxIterations = std::numeric_limits<int>::max();
     xcNdx++;
     std::string dataFilename;
-    dataFilename = "/home/philip/Desktop/test.txt";
-//    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/test_data_uniform_1250000_2.txt";
+//    dataFilename = "/home/philip/Desktop/dataset/sdm2010_datasets/birch_ds1_100000_2.txt";
+//    dataFilename = "/home/philip/Desktop/test.txt";
+    dataFilename = argv[1];
 
     std::ifstream input(dataFilename.c_str());
 
-    int n = 1000;
-    int d = 10;
+    int n = 10000;
+    int d = 90;
 
     delete x;
     delete [] assignment;
@@ -53,7 +55,7 @@ int main(int argc, char **argv){
         input >> x->data[i];
     }
     xcNdx++;
-    k = 10;
+    k = 100;
     std::string method = "kmeansplusplus";
     Dataset *c = NULL;
 //    c = init_centers(*x, k);
@@ -66,24 +68,28 @@ int main(int argc, char **argv){
 
     assign(*x, *c, assignment);
     delete c;
-    algorithm = new HplusKmeans();
-    execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
-    std::cout<<(*(algorithm->centers))(1,1);
-    double sum = 0;
-    for (int i = 0; i < x->n; i++){
-        sum += algorithm->pointCenterDist2(i,assignment[i]);
-    }
-    std::cout<<"k means objective is"<<sum<<"\n";
-    delete algorithm;
-    OriginalSpaceKmeans *algorithm2 = new HamerlyKmeans();
 
-    execute(algorithm2, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
-    std::cout<<(*(algorithm2->centers))(1,1);
-    sum = 0;
-    for (int i = 0; i < x->n; i++){
-        sum += algorithm2->pointCenterDist2(i,assignment[i]);
+    if (strcmp(argv[2], "Hplus") == 0){
+        algorithm = new HplusKmeans();
+        execute(algorithm, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+//        double sum = 0;
+//        for (int i = 0; i < x->n; i++){
+//            sum += algorithm->pointCenterDist2(i,assignment[i]);
+//        }
+//    std::cout<<"k means objective is"<<sum<<"\n";
+//        std::cout << std::setw(10) << sum << "\t";
+        delete algorithm;
     }
-    std::cout<<"k means objective is"<<sum<<"\n";
+    else if (strcmp(argv[2], "Hamerly") == 0){
+        OriginalSpaceKmeans *algorithm2 = new HamerlyKmeans();
+
+        execute(algorithm2, x, k, assignment, xcNdx,numthread, maxIterations, &numItersHistory);
+//        double sum = 0;
+//        for (int i = 0; i < x->n; i++){
+//            sum += algorithm2->pointCenterDist2(i,assignment[i]);
+ //       }
+ //       std::cout << std::setw(10) << sum << "\t";
+    }
 }
 
 rusage get_time() {
@@ -149,11 +155,18 @@ void execute(Kmeans *algorithm, Dataset *x, unsigned short k, unsigned short con
     int iterations = algorithm->run(maxIterations);
     double cluster_time = elapsed_time(&start_time);
     double cluster_wall_time = get_wall_time() - start_wall_time;
+    double sum = 0;
+    for (int i = 0; i < x->n; i++){
+        sum += algorithm->pointCenterDist2(i,assignment[i]);
+    }
+//    std::cout<<"k means objective is"<<sum<<"\n";
+
     std::cout << std::setw(5) << iterations << "\t";
     std::cout << std::setw(10) << numthreads << "\t";
     std::cout << std::setw(10) << cluster_time << "\t";
     std::cout << std::setw(10) << cluster_wall_time << "\t";
     std::cout << std::setw(8) << (getMemoryUsage() / 1024.0) << "\t";
+    std::cout << std::setw(10) << sum << "\t";
  //   while (numItersHistory->size() <= (size_t)xcNdx){
  //       numItersHistory->push_back(iterations);
  //   }
